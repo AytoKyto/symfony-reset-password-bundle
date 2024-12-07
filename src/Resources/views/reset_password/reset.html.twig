@@ -1,0 +1,183 @@
+{% extends '@!ResetPassword/base.html.twig' %}
+
+{% block title %}Nouveau mot de passe{% endblock %}
+
+{% block body %}
+    <div class="reset-password">
+        <h2>Nouveau mot de passe</h2>
+        
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        
+        {% if success %}
+            <div class="alert alert-success">{{ success }}</div>
+        {% endif %}
+        
+        <form id="resetPasswordForm" method="post" class="reset-form">
+            <input type="hidden" name="token" value="{{ token }}">
+            
+            <div class="form-group">
+                <label for="password">Nouveau mot de passe</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required 
+                    class="form-control" 
+                    placeholder="Entrez votre nouveau mot de passe"
+                    minlength="8"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirmez le mot de passe</label>
+                <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    name="confirmPassword" 
+                    required 
+                    class="form-control" 
+                    placeholder="Confirmez votre nouveau mot de passe"
+                >
+            </div>
+            
+            <button type="submit" class="btn-submit" id="submitButton">
+                Réinitialiser le mot de passe
+            </button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .reset-password {
+        max-width: 400px;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .btn-submit {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+    
+    .alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+    }
+    
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+    
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+</style>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('resetPasswordForm');
+        const submitButton = document.getElementById('submitButton');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        
+        function validateForm() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (password.length < 8) {
+                return 'Le mot de passe doit contenir au moins 8 caractères';
+            }
+            
+            if (password !== confirmPassword) {
+                return 'Les mots de passe ne correspondent pas';
+            }
+            
+            return null;
+        }
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const error = validateForm();
+            if (error) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-danger';
+                errorDiv.textContent = error;
+                form.insertBefore(errorDiv, form.firstChild);
+                return;
+            }
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Réinitialisation en cours...';
+            
+            try {
+                const response = await fetch('{{ path('reset_password_reset') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        token: document.querySelector('input[name="token"]').value,
+                        password: passwordInput.value
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    window.location.href = '{{ path('app_login') }}';
+                } else {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'alert alert-danger';
+                    errorDiv.textContent = data.message || 'Une erreur est survenue';
+                    form.insertBefore(errorDiv, form.firstChild);
+                }
+            } catch (error) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-danger';
+                errorDiv.textContent = 'Une erreur est survenue';
+                form.insertBefore(errorDiv, form.firstChild);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Réinitialiser le mot de passe';
+            }
+        });
+    });
+</script>
+{% endblock %}

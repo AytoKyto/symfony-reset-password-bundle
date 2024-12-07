@@ -1,0 +1,8 @@
+services:
+    reset_password.email_sender:
+        class: Ayto\ResetPasswordBundle\Service\ResetPasswordEmailSender
+        arguments:
+            $mailer: '@mailer'
+            $twig: '@twig'
+            $urlGenerator: '@router'
+            # $fromEmail and $tokenLifetime will be set by the extension
