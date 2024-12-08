@@ -33,6 +33,10 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->info('The User entity class that implements ResetPasswordUserInterface')
                 ->end()
+                ->scalarNode('frontend_reset_url')
+                    ->defaultValue('/reset-password/reset')
+                    ->info('URL for the frontend reset password page')
+                ->end()
             ->end()
         ;
 

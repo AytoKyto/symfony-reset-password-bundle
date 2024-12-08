@@ -1,4 +1,26 @@
 services:
-  _defaults:
-    autowire: true
-    autoconfigure: true
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Ayto\ResetPasswordBundle\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/ApiResource/'
+            - '../src/Tests/'
+
+    reset_password.email_sender:
+        class: Ayto\ResetPasswordBundle\Service\ResetPasswordEmailSender
+        arguments:
+            $mailer: '@mailer'
+            $twig: '@twig'
+            $urlGenerator: '@router'
+            # $fromEmail and $tokenLifetime will be set by the extension
+
+    Ayto\ResetPasswordBundle\Service\ResetPasswordService:
+        arguments:
+            $frontendResetUrl: '%reset_password.frontend_reset_url%'
+            $userClass: '%reset_password.user_class%'

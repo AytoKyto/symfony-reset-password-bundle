@@ -1,0 +1,4 @@
+reset_password_web:
+    resource: '@ResetPasswordBundle/src/Controller/'
+    type: annotation
+    prefix: /

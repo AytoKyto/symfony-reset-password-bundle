@@ -1,0 +1,8 @@
+reset_password.api:
+    resource: '../../ApiResource/'
+    type: api_platform
+    prefix: /api
+
+reset_password.web:
+    resource: '../../Controller/'
+    type: attribute

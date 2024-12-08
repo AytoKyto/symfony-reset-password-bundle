@@ -5,10 +5,10 @@ namespace Ayto\ResetPasswordBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeInterface;
 use DateTime;
+use App\Entity\User;
 use Ayto\ResetPasswordBundle\Model\ResetPasswordUserInterface;
 
 #[ORM\Entity]
-#[ORM\MappedSuperclass]
 class ResetPasswordRequest
 {
     #[ORM\Id]
@@ -16,8 +16,8 @@ class ResetPasswordRequest
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: ResetPasswordUserInterface::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id", nullable: false)]
     private ResetPasswordUserInterface $user;
 
     #[ORM\Column(type: 'string', length: 100)]

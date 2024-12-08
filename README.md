@@ -88,7 +88,7 @@ class User implements ResetPasswordUserInterface
 
 ```yaml
 reset_password:
-    resource: '@ResetPasswordBundle/Resources/config/routes.yaml'
+    resource: '@ResetPasswordBundle/config/routes.yaml'
 ```
 
 ## 🎨 Personnalisation

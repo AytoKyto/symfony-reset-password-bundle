@@ -5,10 +5,9 @@ namespace Ayto\ResetPasswordBundle\DependencyInjection;
 
 use Exception;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class ResetPasswordExtension extends Extension
 {
@@ -17,17 +16,22 @@ class ResetPasswordExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $loader = new YamlFileLoader(
+            $container,
+            new FileLocator(__DIR__ . '/../Resources/config')
+        );
+        
+        $loader->load('services.yaml');
+
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yaml');
-
+        $container->setParameter('reset_password.frontend_reset_url', $config['frontend_reset_url']);
+        $container->setParameter('reset_password.user_class', $config['user_class']);
+        
         $emailSenderDefinition = $container->getDefinition('reset_password.email_sender');
         $emailSenderDefinition->setArgument('$fromEmail', $config['from_email']);
         $emailSenderDefinition->setArgument('$tokenLifetime', $config['token_lifetime']);
-
-        $container->setParameter('reset_password.user_class', $config['user_class']);
     }
 
     public function getAlias(): string
