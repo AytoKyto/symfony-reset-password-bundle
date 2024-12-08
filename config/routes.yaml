@@ -3,6 +3,6 @@ reset_password.api:
     type: api_platform
     prefix: /api
 
-reset_password.web:
-    resource: '@ResetPasswordBundle/src/Controller/'
-    type: attribute
+#reset_password.web:
+#   resource: '@ResetPasswordBundle/src/Controller/'
+#    type: attribute

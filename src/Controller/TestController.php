@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ResetPasswordRequestController extends AbstractController
+class TestController extends AbstractController
 {
     public function __invoke(): false|string
     {

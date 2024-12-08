@@ -4,20 +4,20 @@ namespace Ayto\ResetPasswordBundle\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
-use Ayto\ResetPasswordBundle\Controller\ResetPasswordRequestController;
+use Ayto\ResetPasswordBundle\Processor\TestProcessor;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
-    shortName: 'ResetPasswordRequest',
+    shortName: 'test',
     operations: [
         new Post(
-            uriTemplate: '/reset-password/request',
-            processor: ResetPasswordRequestController::class
+            uriTemplate: '/test',
+            processor: TestProcessor::class
         ),
     ],
     formats: ['json']
 )]
-class ResetPasswordRequest
+class Test
 {
     #[Assert\NotBlank(message: "L'email est obligatoire")]
     #[Assert\Email(message: "L'email n'est pas valide")]
